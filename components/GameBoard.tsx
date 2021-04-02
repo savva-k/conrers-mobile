@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Svg, { Ellipse, Rect, Text } from "react-native-svg";
 import { Piece } from "../model/Piece";
 import { Cell } from "../model/Cell";
+import { GameContext } from "./GameContext";
+import { GameProps } from "../model/ReactPropsInterfaces";
 
 const files: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const ranks: number[] = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
@@ -12,49 +14,44 @@ const darkSquare: string = "#744c2f";
 const cellWidth: number = 50;
 const cellHeight: number = 50;
 
-const GameBoard = () => {
+const GameBoard = ({ game }: GameProps) => {
   let currentX: number = 0;
   let currentY: number = 0;
   let cells: any = [];
   let [selectedCell, setSelectedCell] = useState<Cell | undefined>(undefined);
-  let [gameState, setGameState] = useState<Record<string, Piece | undefined>>({
-    a1: Piece.White,
-    a2: Piece.White,
-    a3: Piece.White,
-    b1: Piece.White,
-    b2: Piece.White,
-    b3: Piece.White,
-    c1: Piece.White,
-    c2: Piece.White,
-    c3: Piece.White,
-    d1: Piece.White,
-    d2: Piece.White,
-    d3: Piece.White,
-  });
+  const { makeTurn } = useContext(GameContext);
 
   const handleTouch = (cell: Cell) => {
     if (selectedCell !== undefined) {
-      let previouslySelectedPosition = `${selectedCell.file}${selectedCell.rank}`
-      let maybeSelectedPiece = gameState[previouslySelectedPosition]
+      let previouslySelectedPosition = `${selectedCell.file}${selectedCell.rank}`;
+      let maybeSelectedPiece = game.field[previouslySelectedPosition];
       if (maybeSelectedPiece !== undefined) {
-        let newlySelectedPosition = `${cell.file}${cell.rank}`
-        let isNewPositionTaken = gameState[newlySelectedPosition] !== undefined
+        let newlySelectedPosition = `${cell.file}${cell.rank}`;
+        let isNewPositionTaken =
+          game.field[newlySelectedPosition] !== undefined;
         if (isNewPositionTaken) {
-          setSelectedCell(cell)
+          if (game.field[newlySelectedPosition] !== game.currentTurn) {
+            return;
+          }
+          setSelectedCell(cell);
         } else {
-          let newState = { ...gameState }
-          newState[newlySelectedPosition] = newState[previouslySelectedPosition]
-          newState[previouslySelectedPosition] = undefined
-          setSelectedCell(undefined)
-          setGameState(newState)
+          makeTurn(game.id, previouslySelectedPosition, newlySelectedPosition);
+          setSelectedCell(undefined);
         }
       } else {
-        setSelectedCell(cell)
+        setSelectedCell(cell);
       }
     } else {
-      setSelectedCell(cell)
+      let maybeSelectedPiece = `${cell.file}${cell.rank}`;
+      if (
+        maybeSelectedPiece === undefined ||
+        game.field[maybeSelectedPiece] !== game.currentTurn
+      ) {
+        return;
+      }
+      setSelectedCell(cell);
     }
-  }
+  };
 
   ranks.forEach((rank) => {
     let currentColor: string = rank % 2 === 0 ? lightSquare : darkSquare;
@@ -64,8 +61,8 @@ const GameBoard = () => {
         selectedCell &&
         selectedCell.file === file &&
         selectedCell.rank === rank;
-      let piece = gameState[`${file}${rank}`];
-      
+      let piece = game.field[`${file}${rank}`];
+
       cells.push(
         <>
           <Rect

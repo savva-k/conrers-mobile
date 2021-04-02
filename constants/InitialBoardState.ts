@@ -1,0 +1,28 @@
+import { Piece } from "../model/Piece";
+
+export const InitialBoardState: Record<string, Piece | undefined> = {
+    a1: Piece.White,
+    a2: Piece.White,
+    a3: Piece.White,
+    b1: Piece.White,
+    b2: Piece.White,
+    b3: Piece.White,
+    c1: Piece.White,
+    c2: Piece.White,
+    c3: Piece.White,
+    d1: Piece.White,
+    d2: Piece.White,
+    d3: Piece.White,
+    e8: Piece.Black,
+    f7: Piece.Black,
+    g6: Piece.Black,
+    h8: Piece.Black,
+    e7: Piece.Black,
+    f6: Piece.Black,
+    g8: Piece.Black,
+    h7: Piece.Black,
+    e6: Piece.Black,
+    f8: Piece.Black,
+    g7: Piece.Black,
+    h6: Piece.Black,
+}
