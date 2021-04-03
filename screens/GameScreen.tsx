@@ -1,22 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
-
 import { Text, View } from "../components/Themed";
-
 import GameBoard from "../components/GameBoard";
-import { GameContext } from "../components/GameContext";
 
-export default function TabOneScreen() {
-  const { games } = useContext(GameContext);
+export default function GameScreen({ route }) {
+  const { game } = route.params;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <GameBoard game={games[0]} />
+      <Text style={styles.title}>{game.id}</Text>
+      <GameBoard game={game} />
     </View>
   );
 }
@@ -25,7 +18,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   title: {
     fontSize: 20,

@@ -18,7 +18,14 @@ export const GameProvider = ({ children }: NodeProps) => {
       id: uuid4(),
       myPieces: Piece.White,
       currentTurn: Piece.White,
-      field: InitialBoardState,
+      field: { ...InitialBoardState},
+      isFinished: false,
+    },
+    {
+      id: uuid4(),
+      myPieces: Piece.White,
+      currentTurn: Piece.White,
+      field: { ...InitialBoardState},
       isFinished: false,
     },
   ]);
