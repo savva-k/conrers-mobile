@@ -61,11 +61,13 @@ const GameBoard = ({ game }: GameProps) => {
         selectedCell &&
         selectedCell.file === file &&
         selectedCell.rank === rank;
-      let piece = game.field[`${file}${rank}`];
+      let pieceAddress = `${file}${rank}`
+      let piece = game.field[pieceAddress];
 
       cells.push(
         <>
           <Rect
+            key={pieceAddress}
             x={currentX}
             y={currentY}
             width={cellWidth}

@@ -12,6 +12,7 @@ export default function GamesScreen({ navigation }) {
     <View style={styles.container}>
       {games.map((game) => (
         <Button
+          key={game.id}
           title={game.id}
           onPress={() => navigation.navigate("GameScreen", { game: game })}
         ></Button>
